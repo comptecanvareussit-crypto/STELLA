@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>💘 STELLA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #ffd9e2, #ffb6c1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            margin: 0;
+            overflow: hidden;
+            position: fixed;
+            transition: background 0.5s ease;
+        }
+
+        body.mode-refus {
+            background: linear-gradient(145deg, #d4e0ed, #b8c9d4) !important;
+        }
+
+        .carte {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 48px;
+            padding: 24px 20px;
+            max-width: 460px;
+            width: 100%;
+            max-height: 95vh;
+            box-shadow: 0 25px 45px rgba(180, 60, 80, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        body.mode-refus .carte {
+            box-shadow: 0 25px 45px rgba(70, 100, 120, 0.3);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #b23b4c;
+            text-align: center;
+            margin-bottom: 6px;
+            text-shadow: 2px 2px 0 #ffe0e5;
+            transition: all 0.5s ease;
+            letter-spacing: 2px;
+        }
+
+        body.mode-refus h1 {
+            color: #4a6572;
+            text-shadow: 2px 2px 0 #d4e0ed;
+        }
+
+        .sous-titre {
+            background: #ffe8ed;
+            padding: 8px 18px;
+            border-radius: 60px;
+            width: fit-content;
+            margin: 0 auto 18px;
+            font-weight: 700;
+            color: #8a2e42;
+            border: 3px solid white;
+            box-shadow: 0 4px 0 #c46b7a;
+            font-size: 0.9rem;
+            transition: all 0.5s ease;
+        }
+
+        body.mode-refus .sous-titre {
+            background: #e6edf2;
+            color: #3a5463;
+            box-shadow: 0 4px 0 #7e9aa5;
+        }
+
+        .image-zone {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #ffe3ec;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 10px 0 #b3586b, 0 15px 30px rgba(0,0,0,0.15);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        body.mode-refus .image-zone {
+            background: #e2ecf0;
+            box-shadow: 0 10px 0 #6b8a99, 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .image-zone img, .image-zone video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: #ffd9e2;
+            color: #a5384b;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.5s ease;
+        }
+
+        body.mode-refus .placeholder {
+            background: #d9e4e8;
+            color: #3d5a63;
+        }
+
+        .boutons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 6px 0 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+            border: 4px solid white;
+            transition: 0.05s;
+            box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+            min-width: 160px;
+            letter-spacing: 2px;
+            touch-action: manipulation;
+        }
+
+        .btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+        }
+
+        .btn-oui {
+            background: #d44a5e;
+            box-shadow: 0 10px 0 #952e3f;
+        }
+
+        body.mode-refus .btn-oui {
+            background: #b23b4c;
+            box-shadow: 0 10px 0 #6d2e3a;
+        }
+
+        .btn-non {
+            background: #4a5c6c;
+            box-shadow: 0 10px 0 #2f3a47;
+        }
+
+        body.mode-refus .btn-non {
+            background: #5b7a8a;
+            box-shadow: 0 10px 0 #3e5763;
+        }
+
+        .btn-non-cache {
+            display: none !important;
+        }
+
+        .message-box {
+            background: #fff5f7;
+            border-radius: 28px;
+            padding: 16px 18px;
+            margin: 8px 0 14px;
+            border: 3px solid white;
+            display: none;
+            box-shadow: inset 0 -4px 0 #d48a9c;
+            transition: all 0.5s ease;
+        }
+
+        body.mode-refus .message-box {
+            background: #f0f5fa;
+            box-shadow: inset 0 -4px 0 #8faebc;
+        }
+
+        .message-texte {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5a2a36;
+            text-align: center;
+            line-height: 1.5;
+            transition: color 0.5s ease;
+        }
+
+        body.mode-refus .message-texte {
+            color: #3d5a63;
+        }
+
+        .chat {
+            background: white;
+            border-radius: 100px;
+            padding: 6px 6px 6px 20px;
+            display: flex;
+            align-items: center;
+            border: 3px solid #ff8a9c;
+            box-shadow: 0 6px 0 #b56270;
+            transition: all 0.5s ease;
+            margin-top: 4px;
+        }
+
+        body.mode-refus .chat {
+            border: 3px solid #9eb6c0;
+            box-shadow: 0 6px 0 #6d8a94;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 14px 0;
+            font-size: 1rem;
+            color: #382028;
+            -webkit-user-select: text;
+            user-select: text;
+            min-width: 0;
+        }
+
+        .chat-input:focus {
+            outline: none;
+        }
+
+        .chat-bulle {
+            background: #ffeaee;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 700;
+            color: #ac4057;
+            border: 3px solid white;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 0 #d47a8c;
+            transition: all 0.5s ease;
+        }
+
+        body.mode-refus .chat-bulle {
+            background: #e6edf2;
+            color: #4a6572;
+            box-shadow: 0 4px 0 #7e9aa5;
+        }
+
+        .btn-non-bouge {
+            position: fixed !important;
+            z-index: 9999;
+            transition: left 0.08s linear, top 0.08s linear;
+            box-shadow: 0 10px 0 #2f3a47, 0 0 0 4px white !important;
+        }
+
+        .coeur {
+            position: fixed;
+            bottom: 0;
+            font-size: 28px;
+            animation: monter 5s linear forwards;
+            pointer-events: none;
+            z-index: 9998;
+            filter: drop-shadow(0 0 6px rgba(255,80,100,0.6));
+        }
+
+        body.mode-refus .coeur {
+            filter: drop-shadow(0 0 6px rgba(70,130,180,0.6));
+        }
+
+        @keyframes monter {
+            0% { transform: translateY(0) scale(0.8); opacity: 0.9; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
+
+        @media (max-width: 380px) {
+            .carte { padding: 18px 16px; }
+            h1 { font-size: 1.9rem; }
+            .btn { padding: 12px 24px; font-size: 1.6rem; min-width: 140px; }
+            .placeholder { font-size: 1.1rem; }
+            .chat-bulle { padding: 10px 18px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body id="body">
+    <div class="carte">
+        <h1>💘 STELLA</h1>
+        <div id="sousTitre" class="sous-titre">✨ La réponse est dans ton cœur ✨</div>
+
+        <div id="imageZone" class="image-zone">
+            <div class="placeholder">
+                💕 Veux-tu être ma STELLA ?
+            </div>
+        </div>
+
+        <div class="boutons">
+            <button class="btn btn-oui" id="btnOui">❤️ OUI</button>
+            <button class="btn btn-non" id="btnNon">🏃 NON</button>
+        </div>
+
+        <div id="messageBox" class="message-box">
+            <div id="messageTexte" class="message-texte"></div>
+        </div>
+
+        <div class="chat">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Écris OUI ou NON..." autocomplete="off">
+            <div id="chatBulle" class="chat-bulle">💬 Dis OUI</div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // === STELLA - VERSION FINALE             ===
+        // === ZERO DEPENDANCE - 100% MOBILE       ===
+        // ============================================
+        
+        // 🎬 GIFS EXTERNES 100% FIABLES
+        const GIF_OUI = 'https://media1.tenor.com/m/5uFvYJv3Y8AAAAAC/couple-dance.gif';
+        const GIF_NON = 'https://media.tenor.com/47KEJ7yaVtoAAAAi/chihuahua-stare-at.gif';
+        
+        // ÉLÉMENTS
+        const imageZone = document.getElementById('imageZone');
+        const btnOui = document.getElementById('btnOui');
+        const btnNon = document.getElementById('btnNon');
+        const messageBox = document.getElementById('messageBox');
+        const messageTexte = document.getElementById('messageTexte');
+        const chatInput = document.getElementById('chatInput');
+        const chatBulle = document.getElementById('chatBulle');
+        const sousTitre = document.getElementById('sousTitre');
+        const body = document.getElementById('body');
+        
+        // VARIABLES
+        let compteurNon = 0;
+        let nonCliqueFinal = false;
+        let modeRefusActive = false;
+        
+        // COEURS FLOTTANTS
+        function creerCoeur() {
+            const coeur = document.createElement('div');
+            coeur.className = 'coeur';
+            if (modeRefusActive) {
+                const coeursFroids = ['💙', '💚', '🤍', '💜', '🩵'];
+                coeur.textContent = coeursFroids[Math.floor(Math.random() * coeursFroids.length)];
+            } else {
+                coeur.textContent = '❤️';
+            }
+            coeur.style.left = Math.random() * 100 + '%';
+            coeur.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            coeur.style.fontSize = (Math.random() * 25 + 25) + 'px';
+            document.body.appendChild(coeur);
+            setTimeout(() => coeur.remove(), 7000);
+        }
+        
+        // MODE REFUS
+        function activerModeRefus() {
+            modeRefusActive = true;
+            body.classList.add('mode-refus');
+            sousTitre.innerHTML = '✨ Réponse acceptée, c’est doux aussi ✨';
+        }
+        
+        function desactiverModeRefus() {
+            modeRefusActive = false;
+            body.classList.remove('mode-refus');
+            sousTitre.innerHTML = '✨ La réponse est dans ton cœur ✨';
+        }
+        
+        // FUITE DU BOUTON NON
+        function fuirBouton() {
+            if (compteurNon < 3) {
+                const maxX = window.innerWidth - btnNon.offsetWidth - 15;
+                const maxY = window.innerHeight - btnNon.offsetHeight - 15;
+                const x = Math.max(10, Math.min(maxX, Math.random() * maxX));
+                const y = Math.max(10, Math.min(maxY, Math.random() * maxY));
+                
+                btnNon.style.position = 'fixed';
+                btnNon.classList.add('btn-non-bouge');
+                btnNon.style.left = x + 'px';
+                btnNon.style.top = y + 'px';
+                
+                compteurNon++;
+                messageBox.style.display = 'block';
+                
+                if (compteurNon === 1) {
+                    messageTexte.innerHTML = '🤔 Attrapé ! Mais… est-ce que tu es VRAIMENT sûre ? 💕';
+                    btnNon.innerHTML = '🏃 NON... attrape !';
+                } else if (compteurNon === 2) {
+                    messageTexte.innerHTML = '😢 Encore NON ?… Tu es vraiment certaine ? Clique sur OUI, allez… 💘';
+                    btnNon.innerHTML = '🏃💨 trop lent !';
+                } else if (compteurNon === 3) {
+                    messageTexte.innerHTML = '🥺 Dernière chance… Vraiment, vraiment NON ? Je vais arrêter de courir…';
+                    btnNon.innerHTML = '💨🏃 vite vite !';
+                }
+            }
+        }
+        
+        // BOUTON OUI
+        btnOui.addEventListener('click', function() {
+            imageZone.innerHTML = `<img src="${GIF_OUI}" alt="OUI" style="width:100%; height:100%; object-fit:cover;">`;
+            messageBox.style.display = 'block';
+            messageTexte.innerHTML = '💖✨ OUI !!! Tu es ma STELLA !!! ✨💖<br>C’est le plus beau jour ! 💕';
+            
+            btnNon.classList.add('btn-non-cache');
+            btnNon.style.position = 'relative';
+            btnNon.style.left = '0';
+            btnNon.style.top = '0';
+            btnNon.classList.remove('btn-non-bouge');
+            
+            compteurNon = 0;
+            nonCliqueFinal = false;
+            
+            if (modeRefusActive) desactiverModeRefus();
+            
+            for (let i = 0; i < 15; i++) setTimeout(creerCoeur, i * 40);
+            chatBulle.innerHTML = '❤️ OUI !!! ❤️';
+            chatBulle.style.background = '#ffeaee';
+        });
+        
+        // BOUTON NON - TOUCH
+        btnNon.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!btnNon.classList.contains('btn-non-cache')) {
+                fuirBouton();
+            }
+        });
+        
+        btnNon.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!btnNon.classList.contains('btn-non-cache') && window.innerWidth > 800) {
+                fuirBouton();
+            }
+        });
+        
+        btnNon.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (btnNon.classList.contains('btn-non-cache')) return;
+            
+            if (compteurNon >= 3) {
+                if (!nonCliqueFinal) {
+                    nonCliqueFinal = true;
+                    imageZone.innerHTML = `<img src="${GIF_NON}" alt="NON" style="width:100%; height:100%; object-fit:cover;">`;
+                    messageBox.style.display = 'block';
+                    messageTexte.innerHTML = '🐕 Non, je comprends… C’est doux quand même. 💕';
+                    activerModeRefus();
+                    chatBulle.innerHTML = '💙 C’est doux… 💙';
+                    chatBulle.style.background = '#e6edf2';
+                }
+            } else {
+                messageBox.style.display = 'block';
+                if (compteurNon === 1) {
+                    messageTexte.innerHTML = '🤔 Attrapé ! Mais… est-ce que tu es VRAIMENT sûre ? 💕';
+                } else if (compteurNon === 2) {
+                    messageTexte.innerHTML = '😢 Encore NON ?… Tu es vraiment certaine ? Clique sur OUI, allez… 💘';
+                }
+            }
+            
+            btnNon.style.position = 'relative';
+            btnNon.style.left = '0';
+            btnNon.style.top = '0';
+            btnNon.classList.remove('btn-non-bouge');
+            btnNon.innerHTML = '🏃 NON';
+        });
+        
+        // CHAT
+        chatInput.addEventListener('input', function() {
+            const txt = this.value.toLowerCase();
+            
+            if (txt.includes('non') || txt.includes('nn') || txt.includes('no')) {
+                chatBulle.innerHTML = '😤 Attrape NON alors !';
+                chatBulle.style.background = '#ffe0e0';
+                if (compteurNon < 3 && !btnNon.classList.contains('btn-non-cache')) {
+                    fuirBouton();
+                }
+            } else if (txt.includes('oui') || txt.includes('ui') || txt.includes('oy')) {
+                chatBulle.innerHTML = '✨ OUI !!! ✨';
+                chatBulle.style.background = '#ffe6f0';
+                
+                imageZone.innerHTML = `<img src="${GIF_OUI}" alt="OUI" style="width:100%; height:100%; object-fit:cover;">`;
+                messageBox.style.display = 'block';
+                messageTexte.innerHTML = '🥰 Tu as écrit OUI !!! Je suis trop heureux ! 🥰';
+                
+                btnNon.classList.add('btn-non-cache');
+                btnNon.style.position = 'relative';
+                btnNon.style.left = '0';
+                btnNon.style.top = '0';
+                btnNon.classList.remove('btn-non-bouge');
+                btnNon.innerHTML = '🏃 NON';
+                compteurNon = 0;
+                nonCliqueFinal = false;
+                
+                if (modeRefusActive) desactiverModeRefus();
+            }
+        });
+        
+        // INIT
+        setInterval(creerCoeur, 600);
+        
+        setTimeout(() => {
+            messageBox.style.display = 'block';
+            messageTexte.innerHTML = '💌 Une question… une réponse. Prêt(e) ? 💌';
+        }, 500);
+        
+        // ANTI-ZOOM
+        window.addEventListener('touchstart', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // RESIZE
+        window.addEventListener('resize', function() {
+            if (compteurNon < 3 && !btnNon.classList.contains('btn-non-cache')) {
+                btnNon.style.position = 'relative';
+                btnNon.style.left = '0';
+                btnNon.style.top = '0';
+                btnNon.classList.remove('btn-non-bouge');
+            }
+        });
+    </script>
+</body>
+</html>
