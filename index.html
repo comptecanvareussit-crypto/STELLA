@@ -107,7 +107,7 @@
             box-shadow: 0 10px 0 #6b8a99, 0 15px 30px rgba(0,0,0,0.1);
         }
 
-        .image-zone img, .image-zone video {
+        .image-zone img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -159,6 +159,7 @@
             min-width: 160px;
             letter-spacing: 2px;
             touch-action: manipulation;
+            cursor: pointer;
         }
 
         .btn:active {
@@ -334,13 +335,14 @@
 
     <script>
         // ============================================
-        // === STELLA - VERSION FINALE             ===
-        // === ZERO DEPENDANCE - 100% MOBILE       ===
+        // === STELLA - BOUTONS 100% FONCTIONNELS   ===
+        // === GIFS GIPHY - ZERO BLOCAGE           ===
         // ============================================
         
-        // 🎬 GIFS EXTERNES 100% FIABLES
-        const GIF_OUI = 'https://media1.tenor.com/m/5uFvYJv3Y8AAAAAC/couple-dance.gif';
+        // 🎬 GIFS 100% FIABLES (GIPHY CDN)
+        const GIF_OUI = 'https://media0.giphy.com/media/Rfwlp9c5bA7R3s7Y5D/giphy.gif';
         const GIF_NON = 'https://media.tenor.com/47KEJ7yaVtoAAAAi/chihuahua-stare-at.gif';
+        const FALLBACK_OUI = 'https://media.tenor.com/5uFvYJv3Y8AAAAAC/couple-dance.gif';
         
         // ÉLÉMENTS
         const imageZone = document.getElementById('imageZone');
@@ -417,9 +419,12 @@
             }
         }
         
-        // BOUTON OUI
-        btnOui.addEventListener('click', function() {
-            imageZone.innerHTML = `<img src="${GIF_OUI}" alt="OUI" style="width:100%; height:100%; object-fit:cover;">`;
+        // BOUTON OUI - CORRIGÉ
+        btnOui.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            imageZone.innerHTML = `<img src="${GIF_OUI}" alt="OUI" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='${FALLBACK_OUI}';">`;
             messageBox.style.display = 'block';
             messageTexte.innerHTML = '💖✨ OUI !!! Tu es ma STELLA !!! ✨💖<br>C’est le plus beau jour ! 💕';
             
@@ -437,29 +442,33 @@
             for (let i = 0; i < 15; i++) setTimeout(creerCoeur, i * 40);
             chatBulle.innerHTML = '❤️ OUI !!! ❤️';
             chatBulle.style.background = '#ffeaee';
-        });
+            
+            return false;
+        };
         
         // BOUTON NON - TOUCH
-        btnNon.addEventListener('touchstart', function(e) {
+        btnNon.ontouchstart = function(e) {
             e.preventDefault();
             e.stopPropagation();
             if (!btnNon.classList.contains('btn-non-cache')) {
                 fuirBouton();
             }
-        });
+            return false;
+        };
         
-        btnNon.addEventListener('mousedown', function(e) {
+        btnNon.onmousedown = function(e) {
             e.preventDefault();
             e.stopPropagation();
             if (!btnNon.classList.contains('btn-non-cache') && window.innerWidth > 800) {
                 fuirBouton();
             }
-        });
+            return false;
+        };
         
-        btnNon.addEventListener('click', function(e) {
+        btnNon.onclick = function(e) {
             e.preventDefault();
             e.stopPropagation();
-            if (btnNon.classList.contains('btn-non-cache')) return;
+            if (btnNon.classList.contains('btn-non-cache')) return false;
             
             if (compteurNon >= 3) {
                 if (!nonCliqueFinal) {
@@ -485,10 +494,12 @@
             btnNon.style.top = '0';
             btnNon.classList.remove('btn-non-bouge');
             btnNon.innerHTML = '🏃 NON';
-        });
+            
+            return false;
+        };
         
         // CHAT
-        chatInput.addEventListener('input', function() {
+        chatInput.oninput = function() {
             const txt = this.value.toLowerCase();
             
             if (txt.includes('non') || txt.includes('nn') || txt.includes('no')) {
@@ -516,7 +527,7 @@
                 
                 if (modeRefusActive) desactiverModeRefus();
             }
-        });
+        };
         
         // INIT
         setInterval(creerCoeur, 600);
